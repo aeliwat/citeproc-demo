@@ -7,9 +7,9 @@
  - *Gson* : for json Support (Serialized fields Name , convert to Json object) 
  
  #### Download Project locally
-     git clone https://github.com/aeliwat/citeproc-demo.git
-     cd CiteProcjs
-     mvn clean install
+     $ git clone https://github.com/aeliwat/citeproc-demo.git
+     $ cd CiteProcjs
+     $ mvn clean install
  
  #### Run Project locally  
      mvn spring-boot:run    

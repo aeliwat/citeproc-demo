@@ -15,5 +15,5 @@
      mvn spring-boot:run    
      
  #### Deployed App :
-      http://citeproc-cloud.cfapps.io/cite/
+ http://citeproc-cloud.cfapps.io/cite/
     

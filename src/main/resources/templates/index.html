@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Cite-Proc Javascript</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+
+
+<div class="colud-container">
+    <!--/*/ <th:block th:include="fragments/cloudInformation :: body"></th:block> /*/-->
+</div>
+
+<div class="form-group">
+    <h2>Citation Demo</h2>
+    <div class="col-sm-6 col-md-4">
+        <select id="select_citation_style" class="form-control">
+            <option value="apa">APA</option>
+            <option value="chicago">chicago</option>
+            <option value="mla">MLA</option>
+            <option value="harvard">Harvard</option>
+        </select>
+    </div>
+
+    <div class="col-sm-6 col-md-4">
+        <span class="cls-response"></span>
+    </div>
+</div>
+</body>
+
+</html>

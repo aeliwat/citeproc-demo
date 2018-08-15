@@ -6,9 +6,9 @@
  - *Spring Cloud* : for connect the web app to cloud foundry services (https://docs.run.pivotal.io/) to run simple host-demo
  - *Gson* : for json Support (Serialized fields Name , convert to Json object) 
  
- #### Download Project locally
+ #### Building Project locally
      $ git clone https://github.com/aeliwat/citeproc-demo.git
-     $ cd CiteProcjs
+     $ cd citeproc-demo
      $ mvn clean install
  
  #### Run Project locally  

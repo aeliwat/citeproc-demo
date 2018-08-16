@@ -1,12 +1,13 @@
 package com.aeliwat.citeproc.service;
 
-import com.aeliwat.citeproc.model.Accessed;
-import com.aeliwat.citeproc.model.Issued;
-import com.aeliwat.citeproc.model.Model;
-import com.aeliwat.citeproc.model.Types;
-import com.google.gson.GsonBuilder;
-import de.undercouch.citeproc.csl.CSLName;
-import de.undercouch.citeproc.csl.CSLNameBuilder;
+import de.undercouch.citeproc.ItemDataProvider;
+import de.undercouch.citeproc.csl.CSLItemData;
+import de.undercouch.citeproc.csl.CSLItemDataBuilder;
+import de.undercouch.citeproc.csl.CSLType;
+import de.undercouch.citeproc.helper.json.JsonBuilder;
+import de.undercouch.citeproc.helper.json.JsonBuilderFactory;
+import de.undercouch.citeproc.helper.json.JsonObject;
+import de.undercouch.citeproc.helper.json.StringJsonBuilderFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -15,52 +16,41 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
 
 @Service
 public class CiteProcService {
 
+    private static JsonBuilderFactory factory = new StringJsonBuilderFactory();
 
-    public static Map collectMetaData() {
+    public static String collectMetaData() {
 
-        // collect Author (Given + family)
-        List<CSLName> cslNamesAuthors = new ArrayList<>();
-        cslNamesAuthors.add(new CSLNameBuilder().given("Ammar").family("Eliwat").build());
-        cslNamesAuthors.add(new CSLNameBuilder().given("Jarvis").family("Robert M.").build());
+        ItemDataProvider itemDataProvider = new ItemDataProvider() {
+            @Override
+            public CSLItemData retrieveItem(String id) {
+                return new CSLItemDataBuilder()
+                        .id(id)
+                        .type(CSLType.ARTICLE_JOURNAL)
+                        .title("This is title")
+                        .author("John", "Smith")
+                        .containerTitle("Dummy Journal title ")
+                        .issued(1993, 12, 1)
+                        .DOI("10.222/212121")
+                        .URL("10.222/212121")
+                        .volume(12)
+                        .issue(3)
+                        .page("10-4")
+                        .accessed(2018, 22, 8)
+                        .build();
+            }
 
-        // collect Isuued Date
-        Issued issued= new Issued();
-        issued.setDateParts(Arrays.asList(Arrays.asList(1993,22,1)));
+            @Override
+            public String[] getIds() {
+                return new String[]{"item-4"};
+            }
+        };
 
-        // collect Current Access Date
-        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
-        int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-
-        Accessed accessed = new Accessed();
-        accessed.setDateParts(Arrays.asList(Arrays.asList(currentYear,currentMonth,currentDay)));
-
-        Model model= new Model();
-
-        model.setId("item-4");
-        model.setTitle("Founder of the West Publishing Company");
-        model.setType(Types.ARTICLE.name());
-        model.setAuthor(cslNamesAuthors);
-        model.setContainerTitle("The American Journal of Legal History");
-        model.setIssued(issued);
-        model.setDOI("10.11/2222");
-        model.setURL("10.11/2222");
-        model.setVolume("2");
-        model.setIssue("4");
-        model.setPage("10-80");
-        model.setAccessed(accessed);
-
-        // finally perpare Json element the JSON structure
-
-        Map m = new HashMap();
-        m.put("item-4",model);
-
-        return m;
+        // convert meta Date to Json Object
+        return convertToJSONObject(itemDataProvider, "item-4");
     }
 
 
@@ -87,7 +77,7 @@ public class CiteProcService {
                 }
                 String everything = sb.toString().trim();
 
-                return  everything;
+                return everything;
 
             } finally {
                 br.close();
@@ -101,11 +91,16 @@ public class CiteProcService {
     *  Convert Object to JSON object
     * */
 
-    public String convertToJSONObject(Map items) {
-        try {
-            return new GsonBuilder().create().toJson(items);
-        } catch (Exception ex) {
-            return "";
-        }
+    public static String convertToJSONObject(ItemDataProvider itemDataProvider, String id) {
+
+        JsonObject obj = new JsonObject() {
+            @Override
+            public Object toJson(JsonBuilder builder) {
+                builder.add(id, itemDataProvider.retrieveItem(id));
+                return builder.build();
+            }
+        };
+
+        return obj.toJson(factory.createJsonBuilder()).toString();
     }
 }

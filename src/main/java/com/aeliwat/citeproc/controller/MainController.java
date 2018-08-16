@@ -2,6 +2,14 @@ package com.aeliwat.citeproc.controller;
 
 
 import com.aeliwat.citeproc.service.CiteProcService;
+import de.undercouch.citeproc.ItemDataProvider;
+import de.undercouch.citeproc.csl.CSLItemData;
+import de.undercouch.citeproc.csl.CSLItemDataBuilder;
+import de.undercouch.citeproc.csl.CSLType;
+import de.undercouch.citeproc.helper.json.JsonBuilder;
+import de.undercouch.citeproc.helper.json.JsonBuilderFactory;
+import de.undercouch.citeproc.helper.json.JsonObject;
+import de.undercouch.citeproc.helper.json.StringJsonBuilderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.app.ApplicationInstanceInfo;
 import org.springframework.stereotype.Controller;
@@ -12,11 +20,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 public class MainController {
-
+    private JsonBuilderFactory factory = new StringJsonBuilderFactory();
     @Autowired
     private  CiteProcService citeProcService;
 
@@ -34,8 +43,8 @@ public class MainController {
     @GetMapping("/getMetaData")
     @ResponseBody
     public  String getMeataData(){
-        Map itemDataProvider=this.citeProcService.collectMetaData();
-        return this.citeProcService.convertToJSONObject(itemDataProvider);
+       String str=this.citeProcService.collectMetaData();
+        return str;
 
     }
 

@@ -14,13 +14,14 @@ import org.springframework.util.ResourceUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class CiteProcService {
 
-    private static JsonBuilderFactory factory = new StringJsonBuilderFactory();
+    private static Map<String,String> CUSTOM_CSL_FILES= new HashMap();
+    private static JsonBuilderFactory jsonBuilder = new StringJsonBuilderFactory();
 
     public static String collectMetaData() {
 
@@ -57,34 +58,46 @@ public class CiteProcService {
     /*
     *  Read Custom CSL file From the current class path
     * */
-    public String readCustomCSLFile(String style) throws IOException, URISyntaxException {
-
+    public  String readCustomCSLFile(String style) {
 
         final String DIR_NAME = "classpath:customCitationStyles";
         String fileName=DIR_NAME+"/custom-"+style+".txt";
+        try{
+            File file = ResourceUtils.getFile(fileName);
+            if (file.exists()) {
 
-        File file = ResourceUtils.getFile(fileName);
-        if (file.exists()) {
+                BufferedReader br = new BufferedReader(new FileReader(file.toPath().toString()));
+                try {
+                    StringBuilder sb = new StringBuilder();
+                    String line = br.readLine();
 
-            BufferedReader br = new BufferedReader(new FileReader(file.toPath().toString()));
-            try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
+                    while (line != null) {
+                        sb.append(line.trim());
+                        line = br.readLine();
+                    }
+                    String everything = sb.toString().trim();
 
-                while (line != null) {
-                    sb.append(line.trim());
-                    line = br.readLine();
+                    return everything;
+
+                } finally {
+                    br.close();
                 }
-                String everything = sb.toString().trim();
-
-                return everything;
-
-            } finally {
-                br.close();
             }
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
 
         return "";
+    }
+
+
+    /*
+    * Get the File Style from the map if it exist
+    * else read it and put it in a new Key
+    * */
+
+    public String getCustomCSLFile(String style)  {
+       return CUSTOM_CSL_FILES.computeIfAbsent(style, s -> readCustomCSLFile(style));
     }
 
     /*
@@ -101,6 +114,6 @@ public class CiteProcService {
             }
         };
 
-        return obj.toJson(factory.createJsonBuilder()).toString();
+        return obj.toJson(jsonBuilder.createJsonBuilder()).toString();
     }
 }

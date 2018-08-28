@@ -51,7 +51,7 @@ public class MainController {
     @GetMapping(value="/readCSLFile/{selectedStyle}",produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String readTargetFile(@PathVariable("selectedStyle") String style) throws IOException, URISyntaxException {
-        String str=this.citeProcService.readCustomCSLFile(style);
+        String str=this.citeProcService.getCustomCSLFile(style);
         return str;
     }
 

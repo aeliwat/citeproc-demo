@@ -69,5 +69,6 @@ function getProcessor(styleID) {
 
     // Instantiate and return the engine
     var citeproc = new CSL.Engine(citeprocSys, styleAsText);
+    citeproc.opt.development_extensions.wrap_url_and_doi = true;
     return citeproc;
 };

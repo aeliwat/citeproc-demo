@@ -5,7 +5,7 @@
 
 
 <div class="jumbotron">
-    <h2>Application Clound Instance Info</h2>
+    <h2 style="margin-left: 30px;">Application Clound Instance Info</h2>
 
     <div th:unless="${instanceInfo}">
         <p>The application is not running in a cloud environment. Deploy the application to a cloud platform
@@ -14,17 +14,17 @@
 
     <div th:if="${instanceInfo}">
         <div class="row">
-            <p class="col-sm-2"><b>App Id:</b></p>
+            <p class="col-sm-2"><b style="margin-left: 65px;">App Id:</b></p>
             <p  th:text="${instanceInfo.appId}">appId</p>
         </div>
         <div class="row">
-            <p class="col-sm-2"><b>Status:</b></p>
-            <p  style="color: limegreen">Running ...</p>
+            <p class="col-sm-2"><b style="margin-left: 65px;">Status:</b></p>
+            <p  style="color: limegreen">Clound Running ...</p>
         </div>
 
         <div class="row">
-            <strong class="col-sm-2">Instance Id:</strong>
-            <p class="col-sm-10" th:text="${instanceInfo.instanceId}">instanceId</p>
+            <p class="col-sm-2"><b style="margin-left: 65px;">Instance Id:</b></p>
+            <p  th:text="${instanceInfo.instanceId}">instanceId</p>
         </div>
     </div>
 
